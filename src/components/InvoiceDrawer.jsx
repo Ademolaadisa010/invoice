@@ -56,9 +56,9 @@ function DrawerShell({ isOpen, onClose, title, children, footerLeft, footerRight
           <h2 style={{ fontSize: 24, fontWeight: 700, color: c.text, marginBottom: 32 }}>{title}</h2>
           {children}
         </div>
-        <div style={{ position: "sticky", bottom: 0, background: c.surface, padding: "20px 48px", display: "flex", gap: 8, borderTop: `1px solid ${c.border}`, marginTop: 32 }}>
+        <div style={{background: c.surface, display: "flex", gap: 8, borderTop: `1px solid ${c.border}` }}>
           {footerLeft}
-          <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>{footerRight}</div>
+          <div style={{ display: "flex", position: "fixed", justifyContent:"end",width: "100%", gap: 8, marginTop: "20px" }}>{footerRight}</div>
         </div>
       </div>
     </>
@@ -145,7 +145,6 @@ function InvoiceForm({ data, onChange, c }) {
   );
 }
 
-// ─── New Invoice Drawer ───────────────────────────────────────────────────────
 const BLANK = {
   fromStreet: "19 Union Terrace", fromCity: "London", fromPost: "E1 3EZ", fromCountry: "United Kingdom",
   name: "", email: "", toStreet: "", toCity: "", toPost: "", toCountry: "",
@@ -177,7 +176,7 @@ export function NewInvoiceDrawer({ isOpen, onClose, onSave }) {
     <DrawerShell
       isOpen={isOpen} onClose={onClose} title="New Invoice" c={c}
       footerLeft={
-        <button onClick={onClose} style={{ background: c.surface2, border: "none", borderRadius: 24, padding: "14px 24px", fontSize: 13, fontWeight: 700, color: c.textSecondary, cursor: "pointer" }}>Discard</button>
+        <button onClick={onClose} style={{ background: c.surface2, border: "none", borderRadius: 24, padding: "14px 24px", fontSize: 13, fontWeight: 700, color: c.textSecondary, cursor: "pointer", marginTop: "20px" }}>Discard</button>
       }
       footerRight={
         <>
@@ -191,7 +190,6 @@ export function NewInvoiceDrawer({ isOpen, onClose, onSave }) {
   );
 }
 
-// ─── Edit Invoice Drawer ──────────────────────────────────────────────────────
 export function EditInvoiceDrawer({ isOpen, invoice, onClose, onSave }) {
   const c = useColors();
   const [data, setData] = useState(invoice || {});

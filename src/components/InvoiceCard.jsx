@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useColors } from "../components/Themecontext";
 const statusStyles = {
   paid: { background: "#F3FBF4", color: "#33D69F", dot: "#33D69F" },
   pending: { background: "#FFF8F0", color: "#FF8F00", dot: "#FF8F00" },
@@ -8,18 +8,38 @@ const statusStyles = {
 
 export default function InvoiceCard({ invoice, onClick }) {
   const { id, due, name, amount, status } = invoice;
+  const c = useColors();
   const badge = statusStyles[status] || statusStyles.draft;
   const label = status.charAt(0).toUpperCase() + status.slice(1);
 
   return (
-    <div style={styles.card} onClick={onClick}>
-      <div style={styles.id}>
+    <div style={{background: c.surface,
+      borderRadius: 8,
+      padding: "20px 24px",
+      display: "flex",
+      alignItems: "center",
+      cursor: "pointer",
+      transition: "border-color 0.2s",
+      marginBottom: 16,}} onClick={onClick}>
+      <div style={{width: 100,
+        fontWeight: 700,
+        fontSize: 14,
+        color: c.text,}}>
         <span style={{ color: "#7E88C3" }}>#</span>
         {id}
       </div>
-      <div style={styles.due}>Due {due}</div>
-      <div style={styles.name}>{name}</div>
-      <div style={styles.amount}>£ {amount}</div>
+      <div style={{width: 145,
+      fontSize: 13,
+      color: c.text,}}>Due {due}</div>
+      <div style={{flex: 1,
+      fontSize: 13,
+      color: c.text}}>{name}</div>
+      <div style={{width: 130,
+    textAlign: "right",
+    fontWeight: 700,
+    fontSize: 15,
+    color: c.text,
+    marginRight: 20,}}>£ {amount}</div>
       <div style={styles.statusWrap}>
         <span
           style={{
@@ -45,41 +65,6 @@ export default function InvoiceCard({ invoice, onClick }) {
 }
 
 const styles = {
-  card: {
-    background: "white",
-    border: "1px solid #F3F3F8",
-    borderRadius: 8,
-    padding: "20px 24px",
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
-    transition: "border-color 0.2s",
-    marginBottom: 16,
-  },
-  id: {
-    width: 100,
-    fontWeight: 700,
-    fontSize: 14,
-    color: "#0C0E16",
-  },
-  due: {
-    width: 145,
-    fontSize: 13,
-    color: "#7E88C3",
-  },
-  name: {
-    flex: 1,
-    fontSize: 13,
-    color: "#858BB2",
-  },
-  amount: {
-    width: 130,
-    textAlign: "right",
-    fontWeight: 700,
-    fontSize: 15,
-    color: "#0C0E16",
-    marginRight: 20,
-  },
   statusWrap: {
     width: 110,
     display: "flex",

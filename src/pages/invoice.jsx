@@ -9,6 +9,7 @@ import { initialInvoices } from "../components/invoiceData";
 export default function Invoice() {
   const [invoices, setInvoices] = useState(initialInvoices);
   const [activeFilters, setActiveFilters] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const filtered =
@@ -19,6 +20,18 @@ export default function Invoice() {
   const handleSave = (newInvoice) => {
     setInvoices((prev) => [newInvoice, ...prev]);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // run on load
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   return (
     <div style={styles.page}>
@@ -57,6 +70,7 @@ export default function Invoice() {
 const styles = {
   page: {
     display: "flex",
+    flexDirection: isMobile ? "column" : "row",
     minHeight: "100vh",
     background: "#F8F8FB",
   },

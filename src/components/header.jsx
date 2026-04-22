@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useColors } from "../components/Themecontext";
 
 const STATUSES = ["paid", "pending", "draft"];
-
 export default function Header({ total, activeFilters, onFilterChange, onNewInvoice }) {
   const [open, setOpen] = useState(false);
+  const c = useColors();
 
   const toggle = (status) => {
     onFilterChange(
@@ -19,7 +20,7 @@ export default function Header({ total, activeFilters, onFilterChange, onNewInvo
   return (
     <div style={styles.header}>
       <div>
-        <h1 style={styles.title}>Invoices</h1>
+        <h1 style={{fontSize: 28,fontWeight: 700,marginBottom: 4, color: c.text}}>Invoices</h1>
         <p style={styles.subtitle}>{countLabel}</p>
       </div>
 
@@ -27,7 +28,7 @@ export default function Header({ total, activeFilters, onFilterChange, onNewInvo
         {/* Filter */}
         <div style={styles.filterWrap}>
           <button style={styles.filterBtn} onClick={() => setOpen((o) => !o)}>
-            <span style={styles.filterText}>Filter by status</span>
+            <span style={{color:c.text}}>Filter by status</span>
             <svg
               width="11"
               height="7"
@@ -66,7 +67,6 @@ export default function Header({ total, activeFilters, onFilterChange, onNewInvo
           )}
         </div>
 
-        {/* New Invoice */}
         <button style={styles.newBtn} onClick={onNewInvoice}>
           <span style={styles.plusCircle}>
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
@@ -87,12 +87,7 @@ const styles = {
     justifyContent: "space-between",
     marginBottom: 40,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: "#0C0E16",
-    marginBottom: 4,
-  },
+  
   subtitle: {
     fontSize: 13,
     color: "#888EB0",
@@ -117,9 +112,7 @@ const styles = {
     color: "#0C0E16",
     padding: 0,
   },
-  filterText: {
-    color: "#0C0E16",
-  },
+  
   dropdown: {
     position: "absolute",
     top: "calc(100% + 12px)",

@@ -20,7 +20,7 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const badge = (isDark ? badgeMapDark : badgeMapDark)[invoice.status] || badgeMap[invoice.status];
+  // const badge = (isDark ? badgeMapDark : badgeMapDark)[invoice.status] || badgeMap[invoice.status];
   const realBadge = (isDark ? badgeMapDark : badgeMap)[invoice.status] || badgeMap.draft;
   const label = invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1);
 
@@ -34,7 +34,6 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
     <div style={{ minHeight: "100vh", background: c.bg, transition: "background 0.3s", padding: "48px 0" }}>
       <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 24px" }}>
 
-        {/* Go back */}
         <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 12, background: "none", border: "none", cursor: "pointer", fontSize: 14, fontWeight: 700, color: c.text, marginBottom: 32, padding: 0 }}>
           <svg width="7" height="11" viewBox="0 0 7 11" fill="none">
             <path d="M6 1L1.5 5.5 6 10" stroke="#7C5DFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -42,7 +41,6 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
           Go back
         </button>
 
-        {/* Status bar */}
         <div style={{ background: c.surface, borderRadius: 8, padding: "20px 32px", display: "flex", alignItems: "center", marginBottom: 24, gap: 16 }}>
           <span style={{ fontSize: 13, color: c.textMuted, marginRight: 16 }}>Status</span>
           <span style={{ padding: "6px 20px", borderRadius: 6, fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8, background: realBadge.bg, color: realBadge.color }}>
@@ -57,9 +55,7 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
           </div>
         </div>
 
-        {/* Invoice body */}
         <div style={{ background: c.surface, borderRadius: 8, padding: 48 }}>
-          {/* Header row */}
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 40 }}>
             <div>
               <p style={{ fontSize: 16, fontWeight: 700, color: c.text, marginBottom: 4 }}>
@@ -75,7 +71,6 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
             </div>
           </div>
 
-          {/* Info grid */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24, marginBottom: 48 }}>
             <div>
               <p style={{ fontSize: 13, color: c.textMuted, marginBottom: 8 }}>Invoice Date</p>
@@ -96,7 +91,6 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
             </div>
           </div>
 
-          {/* Item table */}
           <div style={{ background: c.surface2, borderRadius: "8px 8px 0 0", padding: 32 }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 80px 120px 120px", gap: 16, marginBottom: 24 }}>
               {["Item Name", "QTY.", "Price", "Total"].map((h, i) => (
@@ -112,7 +106,6 @@ export default function InvoiceView({ invoice, onBack, onUpdate, onDelete }) {
               </div>
             ))}
           </div>
-          {/* Amount Due */}
           <div style={{ background: "#373B53", borderRadius: "0 0 8px 8px", padding: "24px 32px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: 13, color: "white" }}>Amount Due</span>
             <span style={{ fontSize: 24, fontWeight: 700, color: "white" }}>£ {total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span>

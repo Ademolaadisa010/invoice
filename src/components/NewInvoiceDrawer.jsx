@@ -146,7 +146,6 @@ function InvoiceForm({ data, onChange, c }) {
   );
 }
 
-// ─── New Invoice Drawer ───────────────────────────────────────────────────────
 const BLANK = {
   fromStreet: "19 Union Terrace", fromCity: "London", fromPost: "E1 3EZ", fromCountry: "United Kingdom",
   name: "", email: "", toStreet: "", toCity: "", toPost: "", toCountry: "",
@@ -178,7 +177,7 @@ export function NewInvoiceDrawer({ isOpen, onClose, onSave }) {
     <DrawerShell
       isOpen={isOpen} onClose={onClose} title="New Invoice" c={c}
       footerLeft={
-        <button onClick={onClose} style={{ background: c.surface2, border: "none", borderRadius: 24, padding: "14px 24px", fontSize: 13, fontWeight: 700, color: c.textSecondary, cursor: "pointer" }}>Discard</button>
+        <button onClick={onClose} style={{ background: c.surface2, border: "none", borderRadius: 24, padding: "14px 24px", fontSize: 13, fontWeight: 700, color: c.textSecondary, cursor: "pointer",marginTop: "20px" }}>Discard</button>
       }
       footerRight={
         <>
@@ -192,7 +191,6 @@ export function NewInvoiceDrawer({ isOpen, onClose, onSave }) {
   );
 }
 
-// ─── Edit Invoice Drawer ──────────────────────────────────────────────────────
 export function EditInvoiceDrawer({ isOpen, invoice, onClose, onSave }) {
   const c = useColors();
   const [data, setData] = useState({ items: [], ...invoice });
