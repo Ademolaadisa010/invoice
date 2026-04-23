@@ -5,6 +5,7 @@ import InvoiceCard from "../components/InvoiceCard";
 import EmptyState from "../components/EmptyState";
 import NewInvoiceDrawer from "../components/NewInvoiceDrawer";
 import { initialInvoices } from "../components/invoiceData";
+import "../mobile-style/invoice.css";
 
 export default function Invoice() {
   const [invoices, setInvoices] = useState(initialInvoices);
@@ -34,7 +35,7 @@ export default function Invoice() {
 
 
   return (
-    <div style={styles.page}>
+    <div className="invoice">
       <Sidebar />
 
       <main style={styles.main}>
@@ -68,17 +69,11 @@ export default function Invoice() {
 }
 
 const styles = {
-  page: {
-    display: "flex",
-    flexDirection: isMobile ? "column" : "row",
-    minHeight: "100vh",
-    background: "#F8F8FB",
-  },
   main: {
     flex: 1,
     display: "flex",
     justifyContent: "center",
-    padding: "60px 24px 40px",
+    // padding: "60px 24px 40px",
   },
   content: {
     width: "100%",

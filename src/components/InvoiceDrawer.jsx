@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useColors } from "../components/Themecontext";
+import { useColors } from "./Themecontext";
 
 function buildInputStyle(c) {
   return {
@@ -35,30 +35,35 @@ function FormInput({ value, onChange, placeholder, type = "text", c }) {
 }
 
 function DrawerShell({ isOpen, onClose, title, children, footerLeft, footerRight, c }) {
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 600;
+  const drawerLeft = isMobile ? 0 : 80;
+  const drawerWidth = isMobile ? "100%" : 540;
+  const drawerPad = isMobile ? "24px" : "48px";
+
   return (
     <>
       {isOpen && (
         <div
           onClick={onClose}
-          style={{ position: "fixed", top: 0, left: 80, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", zIndex: 200 }}
+          style={{ position: "fixed", top: 0, left: drawerLeft, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", zIndex: 200 }}
         />
       )}
       <div
         style={{
-          position: "fixed", top: 0, left: 80, bottom: 0, width: 540,
+          position: "fixed", top: 0, left: drawerLeft, bottom: 0, width: drawerWidth,
           background: c.surface, zIndex: 300, overflowY: "auto",
           transform: isOpen ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)",
-          borderRadius: "0 20px 20px 0", paddingBottom: 100,
+          borderRadius: isMobile ? 0 : "0 20px 20px 0", paddingBottom: 100,
         }}
       >
-        <div style={{ padding: "48px 48px 0" }}>
+        <div style={{ padding: `${drawerPad} ${drawerPad} 0` }}>
           <h2 style={{ fontSize: 24, fontWeight: 700, color: c.text, marginBottom: 32 }}>{title}</h2>
           {children}
         </div>
-        <div style={{background: c.surface, display: "flex", gap: 8, borderTop: `1px solid ${c.border}` }}>
+        <div style={{ position: "sticky", bottom: 0, background: c.surface, padding: `20px ${drawerPad}`, display: "flex", gap: 8, borderTop: `1px solid ${c.border}`, marginTop: 32 }}>
           {footerLeft}
-          <div style={{ display: "flex", position: "fixed", justifyContent:"end",width: "100%", gap: 8, marginTop: "20px" }}>{footerRight}</div>
+          <div style={{ display: "flex", gap: 8, marginLeft: "auto", flexWrap: "wrap" }}>{footerRight}</div>
         </div>
       </div>
     </>
@@ -76,13 +81,14 @@ function InvoiceForm({ data, onChange, c }) {
     onChange: (val) => onChange(key, val),
   });
 
+  const safeItems = data.items || [];
   const updateItem = (i, f, v) => {
-    const items = [...data.items];
+    const items = [...safeItems];
     items[i] = { ...items[i], [f]: f === "name" ? v : +v };
     onChange("items", items);
   };
-  const addItem = () => onChange("items", [...data.items, { name: "", qty: 1, price: 0 }]);
-  const removeItem = (i) => onChange("items", data.items.filter((_, idx) => idx !== i));
+  const addItem = () => onChange("items", [...safeItems, { name: "", qty: 1, price: 0 }]);
+  const removeItem = (i) => onChange("items", safeItems.filter((_, idx) => idx !== i));
 
   return (
     <>
@@ -127,7 +133,7 @@ function InvoiceForm({ data, onChange, c }) {
           <span key={i} style={{ fontSize: 12, color: c.textSecondary }}>{h}</span>
         ))}
       </div>
-      {data.items.map((item, i) => (
+      {safeItems.map((item, i) => (
         <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 56px 86px 76px 24px", gap: 12, marginBottom: 12, alignItems: "center" }}>
           <input type="text" value={item.name} onChange={(e) => updateItem(i, "name", e.target.value)} style={inp} />
           <input type="number" value={item.qty} onChange={(e) => updateItem(i, "qty", e.target.value)} style={{ ...inp, textAlign: "center", padding: "12px 8px" }} />
@@ -176,7 +182,7 @@ export function NewInvoiceDrawer({ isOpen, onClose, onSave }) {
     <DrawerShell
       isOpen={isOpen} onClose={onClose} title="New Invoice" c={c}
       footerLeft={
-        <button onClick={onClose} style={{ background: c.surface2, border: "none", borderRadius: 24, padding: "14px 24px", fontSize: 13, fontWeight: 700, color: c.textSecondary, cursor: "pointer", marginTop: "20px" }}>Discard</button>
+        <button onClick={onClose} style={{ background: c.surface2, border: "none", borderRadius: 24, padding: "14px 24px", fontSize: 13, fontWeight: 700, color: c.textSecondary, cursor: "pointer" }}>Discard</button>
       }
       footerRight={
         <>
@@ -192,9 +198,9 @@ export function NewInvoiceDrawer({ isOpen, onClose, onSave }) {
 
 export function EditInvoiceDrawer({ isOpen, invoice, onClose, onSave }) {
   const c = useColors();
-  const [data, setData] = useState(invoice || {});
+  const [data, setData] = useState({ items: [], ...invoice });
 
-  useEffect(() => { if (invoice) setData({ ...invoice }); }, [invoice]);
+  useEffect(() => { if (invoice) setData({ items: [], ...invoice }); }, [invoice]);
 
   const field = (key, val) => setData((d) => ({ ...d, [key]: val }));
 

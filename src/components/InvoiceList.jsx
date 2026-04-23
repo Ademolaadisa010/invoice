@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import Header from "../components/header";
-import InvoiceCard from "../components/InvoiceCard";
-import EmptyState from "../components/EmptyState";
-import { NewInvoiceDrawer } from "../components/InvoiceDrawer";
-import { useColors } from "../components/Themecontext";
+import Header from "./header";
+import InvoiceCard from "./InvoiceCard";
+import EmptyState from "./EmptyState";
+import { NewInvoiceDrawer } from "./InvoiceDrawer";
+import { useColors } from "./Themecontext";
+import { useBreakpoint } from "./useBreakpoint";
 
 export default function InvoiceList({ invoices, onSelect, onAdd, onFilterChange, activeFilters }) {
   const c = useColors();
+  const { isMobile } = useBreakpoint();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const filtered = activeFilters.length
@@ -15,7 +17,7 @@ export default function InvoiceList({ invoices, onSelect, onAdd, onFilterChange,
 
   return (
     <div style={{ minHeight: "100vh", background: c.bg, transition: "background 0.3s" }}>
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "60px 24px 40px" }}>
+      <div style={{ maxWidth: 780, margin: "0 auto", padding: isMobile ? "32px 24px" : "60px 32px 40px" }}>
         <Header
           total={filtered.length}
           activeFilters={activeFilters}
@@ -25,7 +27,11 @@ export default function InvoiceList({ invoices, onSelect, onAdd, onFilterChange,
         {filtered.length === 0 ? (
           <EmptyState />
         ) : (
-          <div>{filtered.map((inv) => <InvoiceCard key={inv.id} invoice={inv} onClick={() => onSelect(inv.id)} />)}</div>
+          <div>
+            {filtered.map((inv) => (
+              <InvoiceCard key={inv.id} invoice={inv} onClick={() => onSelect(inv.id)} />
+            ))}
+          </div>
         )}
       </div>
       <NewInvoiceDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} onSave={onAdd} />

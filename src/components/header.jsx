@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { useColors } from "../components/Themecontext";
+import { useColors } from "./Themecontext";
+import { useBreakpoint } from "./useBreakpoint";
 
 const STATUSES = ["paid", "pending", "draft"];
+
 export default function Header({ total, activeFilters, onFilterChange, onNewInvoice }) {
   const [open, setOpen] = useState(false);
   const c = useColors();
+  const { isMobile } = useBreakpoint();
+
+  const countLabel = isMobile
+    ? `${total} invoice${total !== 1 ? "s" : ""}`
+    : total === 0
+    ? "No invoices"
+    : `There are ${total} total invoice${total !== 1 ? "s" : ""}`;
 
   const toggle = (status) => {
     onFilterChange(
@@ -14,43 +23,34 @@ export default function Header({ total, activeFilters, onFilterChange, onNewInvo
     );
   };
 
-  const countLabel =
-    total === 0 ? "No invoices" : `There are ${total} total invoice${total !== 1 ? "s" : ""}`;
-
   return (
-    <div style={styles.header}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isMobile ? 24 : 40 }}>
+      {/* Left: title */}
       <div>
-        <h1 style={{fontSize: 28,fontWeight: 700,marginBottom: 4, color: c.text}}>Invoices</h1>
-        <p style={styles.subtitle}>{countLabel}</p>
+        <h1 style={{ fontSize: isMobile ? 20 : 28, fontWeight: 700, color: c.text, marginBottom: 4 }}>Invoices</h1>
+        <p style={{ fontSize: 13, color: c.textMuted }}>{countLabel}</p>
       </div>
 
-      <div style={styles.actions}>
+      {/* Right: filter + new invoice */}
+      <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 16 : 32 }}>
         {/* Filter */}
-        <div style={styles.filterWrap}>
-          <button style={styles.filterBtn} onClick={() => setOpen((o) => !o)}>
-            <span style={{color:c.text}}>Filter by status</span>
-            <svg
-              width="11"
-              height="7"
-              viewBox="0 0 11 7"
-              fill="none"
-              style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
-            >
+        <div style={{ position: "relative" }}>
+          <button
+            onClick={() => setOpen((o) => !o)}
+            style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", fontSize: 14, fontWeight: 700, color: c.text, padding: 0 }}
+          >
+            {isMobile ? "Filter" : "Filter by status"}
+            <svg width="11" height="7" viewBox="0 0 11 7" fill="none" style={{ transform: open ? "rotate(180deg)" : "none", transition: "0.2s" }}>
               <path d="M1 1l4.5 4.5L10 1" stroke="#7C5DFA" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
-
           {open && (
-            <div style={styles.dropdown}>
+            <div style={{ position: "absolute", top: "calc(100% + 12px)", left: "50%", transform: "translateX(-50%)", background: c.surface, borderRadius: 8, boxShadow: "0 10px 30px rgba(0,0,0,0.25)", padding: "16px 20px", minWidth: 170, zIndex: 100, display: "flex", flexDirection: "column", gap: 12 }}>
               {STATUSES.map((s) => (
-                <label key={s} style={styles.filterOption}>
+                <label key={s} style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
                   <div
-                    style={{
-                      ...styles.checkbox,
-                      background: activeFilters.includes(s) ? "#7C5DFA" : "white",
-                      borderColor: activeFilters.includes(s) ? "#7C5DFA" : "#DFE3FA",
-                    }}
                     onClick={() => toggle(s)}
+                    style={{ width: 16, height: 16, borderRadius: 2, border: `1px solid ${activeFilters.includes(s) ? "#7C5DFA" : c.border}`, background: activeFilters.includes(s) ? "#7C5DFA" : c.surface, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}
                   >
                     {activeFilters.includes(s) && (
                       <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
@@ -58,7 +58,7 @@ export default function Header({ total, activeFilters, onFilterChange, onNewInvo
                       </svg>
                     )}
                   </div>
-                  <span style={styles.filterLabel} onClick={() => toggle(s)}>
+                  <span onClick={() => toggle(s)} style={{ fontSize: 13, fontWeight: 700, color: c.text, userSelect: "none" }}>
                     {s.charAt(0).toUpperCase() + s.slice(1)}
                   </span>
                 </label>
@@ -67,111 +67,19 @@ export default function Header({ total, activeFilters, onFilterChange, onNewInvo
           )}
         </div>
 
-        <button style={styles.newBtn} onClick={onNewInvoice}>
-          <span style={styles.plusCircle}>
+        {/* New Invoice button */}
+        <button
+          onClick={onNewInvoice}
+          style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 14, background: "#7C5DFA", border: "none", borderRadius: 24, padding: isMobile ? "8px 12px 8px 8px" : "8px 16px 8px 8px", color: "white", fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}
+        >
+          <span style={{ width: 32, height: 32, background: "white", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
               <path d="M5.5 1v9M1 5.5h9" stroke="#7C5DFA" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </span>
-          New Invoice
+          {isMobile ? "New" : "New Invoice"}
         </button>
       </div>
     </div>
   );
 }
-
-const styles = {
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 40,
-  },
-  
-  subtitle: {
-    fontSize: 13,
-    color: "#888EB0",
-  },
-  actions: {
-    display: "flex",
-    alignItems: "center",
-    gap: 32,
-  },
-  filterWrap: {
-    position: "relative",
-  },
-  filterBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    fontSize: 14,
-    fontWeight: 700,
-    color: "#0C0E16",
-    padding: 0,
-  },
-  
-  dropdown: {
-    position: "absolute",
-    top: "calc(100% + 12px)",
-    left: "50%",
-    transform: "translateX(-50%)",
-    background: "white",
-    borderRadius: 8,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-    padding: "16px 20px",
-    minWidth: 180,
-    zIndex: 100,
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  filterOption: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    cursor: "pointer",
-  },
-  checkbox: {
-    width: 16,
-    height: 16,
-    borderRadius: 2,
-    border: "1px solid #DFE3FA",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    flexShrink: 0,
-  },
-  filterLabel: {
-    fontSize: 13,
-    fontWeight: 700,
-    color: "#0C0E16",
-    cursor: "pointer",
-    userSelect: "none",
-  },
-  newBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: 14,
-    background: "#7C5DFA",
-    border: "none",
-    borderRadius: 24,
-    padding: "8px 16px 8px 8px",
-    color: "white",
-    fontSize: 14,
-    fontWeight: 700,
-    cursor: "pointer",
-  },
-  plusCircle: {
-    width: 32,
-    height: 32,
-    background: "white",
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-};
