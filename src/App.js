@@ -15,13 +15,12 @@ function AppShell() {
   const [activeFilters, setActiveFilters] = useLocalStorage("invoice-filters", []);
   const [selectedId, setSelectedId] = useState(null);
 
-  // Migration: ensure every stored invoice has an items array
   React.useEffect(() => {
     const needsFix = invoices.some((inv) => !Array.isArray(inv.items));
     if (needsFix) {
       setInvoices((prev) => prev.map((inv) => ({ items: [], ...inv })));
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const selected = invoices.find((inv) => inv.id === selectedId) || null;
   const handleAdd    = (newInv)  => setInvoices((prev) => [newInv, ...prev]);
